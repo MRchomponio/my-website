@@ -54,7 +54,7 @@ export default async function AdminBadgesPage() {
                     <BadgeIcon
                       name={badge.name}
                       description={badge.description ?? ""}
-                      icon={badge.icon ?? undefined}
+                      icon={badge.icon ?? ""} // ⬅️ تغییر: به جای undefined، یک رشته خالی
                       size="sm"
                     />
                     <div className="flex-1 min-w-0">
@@ -84,7 +84,7 @@ export default async function AdminBadgesPage() {
                   <BadgeIcon
                     name={badge.name}
                     description={badge.description ?? ""}
-                    icon={badge.icon ?? undefined}
+                    icon={badge.icon ?? ""} // ⬅️ تغییر: به جای undefined، یک رشته خالی
                     size="sm"
                   />
                   <div className="flex-1 min-w-0">
