@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { GameForm } from "@/components/admin/game-form";
 import { createClient } from "@/lib/supabase/server";
 
-// تعریف کامل نوع Game با تمام فیلدهای مورد نیاز
+// تعریف نوع Game با فیلدهایی که می‌تونن null باشن
 type Game = {
   id: string;
   name: string;
@@ -11,9 +11,8 @@ type Game = {
   description: string | null;
   banner_url: string | null;
   icon_url: string | null;
-  accent_color: string | null;
+  accent_color: string | null; // ⬅️ این می‌تونه null باشه
   created_at: string;
-  // هر فیلد دیگه‌ای که ممکنه داشته باشی
 };
 
 interface PageProps {
@@ -34,8 +33,11 @@ export default async function EditGamePage({ params }: PageProps) {
     notFound();
   }
 
-  // تبدیل نوع game به Game
-  const typedGame = game as Game;
+  // تبدیل نوع game به Game با مقدار پیش‌فرض برای accent_color
+  const typedGame: Game = {
+    ...game,
+    accent_color: game.accent_color ?? "#ffffff", // مقدار پیش‌فرض
+  };
 
   return (
     <div>
