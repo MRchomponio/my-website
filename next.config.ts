@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // این خط رو اضافه کنید تا Next.js بدونه که پوشه src رو بررسی کنه
+  // ⬅️ این خط رو اضافه کنید
   dir: './src',
   
   images: {
