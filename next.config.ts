@@ -1,10 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // تنظیم پورت برای اجرا
-  serverRuntimeConfig: {
-    port: 3000,
-  },
   images: {
     remotePatterns: [
       {
