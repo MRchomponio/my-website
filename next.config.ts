@@ -1,17 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  dir: './src', // این خط رو نگه دارید
+  // حذف کنید: dir: './src', 
+  
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.supabase.co", // این رو به حالت اول برگردونید
+        hostname: "*.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
       {
         protocol: "https",
-        hostname: "*.supabase.co", // این رو هم به حالت اول برگردونید
+        hostname: "*.supabase.co",
         pathname: "/storage/v1/object/sign/**",
       },
     ],
