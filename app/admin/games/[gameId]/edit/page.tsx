@@ -3,12 +3,17 @@ import { Card } from "@/components/ui/card";
 import { GameForm } from "@/components/admin/game-form";
 import { createClient } from "@/lib/supabase/server";
 
-// تعریف نوع برای Game
+// تعریف کامل نوع Game با تمام فیلدهای مورد نیاز
 type Game = {
   id: string;
   name: string;
+  slug: string;
   description: string | null;
-  // سایر فیلدهایی که ممکنه داشته باشی
+  banner_url: string | null;
+  icon_url: string | null;
+  accent_color: string | null;
+  created_at: string;
+  // هر فیلد دیگه‌ای که ممکنه داشته باشی
 };
 
 interface PageProps {
@@ -25,12 +30,12 @@ export default async function EditGamePage({ params }: PageProps) {
     .eq("id", gameId)
     .maybeSingle();
 
-  // تبدیل نوع game
-  const typedGame = game as Game | null;
-
-  if (!typedGame) {
+  if (!game) {
     notFound();
   }
+
+  // تبدیل نوع game به Game
+  const typedGame = game as Game;
 
   return (
     <div>
