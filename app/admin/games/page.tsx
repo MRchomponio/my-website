@@ -13,7 +13,7 @@ export default async function AdminGamesPage() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  // استفاده از as any برای عبور از خطاهای TypeScript
+  // تبدیل نوع games به any برای عبور از خطا
   const typedGames = games as any[];
 
   return (
@@ -58,7 +58,7 @@ export default async function AdminGamesPage() {
                     className="w-full h-full flex items-center justify-center text-lg font-bold"
                     style={{ backgroundColor: `${game.accent_color}20`, color: game.accent_color }}
                   >
-                    {game.name[0]}
+                    {game.name?.[0] || "?"}
                   </div>
                 )}
               </div>
