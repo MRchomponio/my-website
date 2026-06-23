@@ -1,15 +1,40 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Package } from "lucide-react";
-import { Card, PillBadge, Avatar } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 import { ReviewListingForm } from "@/components/admin/review-listing-form";
 import { requireAdmin } from "@/lib/auth-helpers";
 import { formatToman } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { faIR } from "date-fns/locale";
-import type { AccountListingStatus } from "@/types/database";
 
-const statusMeta: Record<AccountListingStatus, { label: string; tone: "neutral" | "green" | "red" | "blue" }> = {
+// تعریف نوع برای Listing
+type Listing = {
+  id: string;
+  title: string;
+  image_urls: string[] | null;
+  price_rials: number;
+  status: string;
+  admin_note: string | null;
+  created_at: string;
+  games: { name: string } | null;
+  seller: { username: string; avatar_url: string | null } | null;
+};
+
+// کامپوننت PillBadge ساده
+const PillBadge = ({ tone, children }: { tone: "neutral" | "green" | "red" | "blue"; children: React.ReactNode }) => {
+  const colors = {
+    neutral: "bg-gray-500/10 text-gray-400",
+    green: "bg-green-500/10 text-green-500",
+    red: "bg-red-500/10 text-red-500",
+    blue: "bg-blue-500/10 text-blue-500",
+  };
+  return <span className={`text-xs px-2 py-0.5 rounded-full ${colors[tone]}`}>{children}</span>;
+};
+
+const statusMeta: Record<string, { label: string; tone: "neutral" | "green" | "red" | "blue" }> = {
   pending_review: { label: "در انتظار بررسی", tone: "neutral" },
   active: { label: "فعال", tone: "green" },
   rejected: { label: "رد شده", tone: "red" },
@@ -28,7 +53,9 @@ export default async function AdminListingsPage() {
     .order("status", { ascending: true })
     .order("created_at", { ascending: false });
 
-  const sorted = [...(listings ?? [])].sort((a, b) => {
+  const typedListings = listings as Listing[] | null;
+
+  const sorted = [...(typedListings ?? [])].sort((a, b) => {
     if (a.status === "pending_review" && b.status !== "pending_review") return -1;
     if (b.status === "pending_review" && a.status !== "pending_review") return 1;
     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
@@ -53,9 +80,9 @@ export default async function AdminListingsPage() {
       ) : (
         <div className="space-y-3">
           {sorted.map((listing) => {
-            const meta = statusMeta[listing.status as AccountListingStatus];
-            const game = listing.games as unknown as { name: string } | null;
-            const seller = listing.seller as unknown as { username: string; avatar_url: string | null } | null;
+            const meta = statusMeta[listing.status] || { label: listing.status, tone: "neutral" };
+            const game = listing.games as { name: string } | null;
+            const seller = listing.seller as { username: string; avatar_url: string | null } | null;
             const cover = (listing.image_urls as string[])?.[0] ?? null;
 
             return (
@@ -83,7 +110,7 @@ export default async function AdminListingsPage() {
                     {seller && (
                       <Link href={`/profile/${seller.username}`}
                         className="flex items-center gap-1.5 mt-1.5 text-xs text-foreground-muted hover:text-foreground w-fit">
-                        <Avatar src={seller.avatar_url} alt={seller.username} size={16} />
+                        <Avatar src={seller.avatar_url || undefined} alt={seller.username} size={16} />
                         @{seller.username}
                       </Link>
                     )}
