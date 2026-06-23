@@ -6,18 +6,6 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { DeleteGameButton } from "@/components/admin/delete-game-button";
 
-// تعریف نوع Game
-type Game = {
-  id: string;
-  name: string;
-  slug: string;
-  accent_color: string | null;
-  icon_url: string | null;
-  banner_url: string | null;
-  description: string | null;
-  created_at: string;
-};
-
 export default async function AdminGamesPage() {
   const supabase = await createClient();
   const { data: games } = await supabase
@@ -26,7 +14,7 @@ export default async function AdminGamesPage() {
     .order("created_at", { ascending: false });
 
   // استفاده از as any برای عبور از خطاهای TypeScript
-  const typedGames = (games as any[]) ?? [];
+  const typedGames = games as any[];
 
   return (
     <div>
@@ -45,7 +33,7 @@ export default async function AdminGamesPage() {
         </Link>
       </div>
 
-      {typedGames.length === 0 ? (
+      {!typedGames || typedGames.length === 0 ? (
         <Card className="p-8 text-center text-foreground-muted">
           هنوز هیچ بازی‌ای اضافه نشده. اولین بازی رو اضافه کن.
         </Card>
@@ -55,7 +43,7 @@ export default async function AdminGamesPage() {
             <Card key={game.id} className="p-4 flex items-center gap-4">
               <div
                 className="w-14 h-14 rounded-xl shrink-0 relative overflow-hidden border"
-                style={{ borderColor: `${game.accent_color ?? "#e5e7eb"}50` }}
+                style={{ borderColor: `${game.accent_color}50` }}
               >
                 {game.icon_url ? (
                   <Image
@@ -68,12 +56,9 @@ export default async function AdminGamesPage() {
                 ) : (
                   <div
                     className="w-full h-full flex items-center justify-center text-lg font-bold"
-                    style={{
-                      backgroundColor: `${game.accent_color ?? "#e5e7eb"}20`,
-                      color: game.accent_color ?? "#e5e7eb",
-                    }}
+                    style={{ backgroundColor: `${game.accent_color}20`, color: game.accent_color }}
                   >
-                    {game.name?.[0] || "?"}
+                    {game.name[0]}
                   </div>
                 )}
               </div>
@@ -87,8 +72,8 @@ export default async function AdminGamesPage() {
 
               <span
                 className="w-5 h-5 rounded-full border border-background-border shrink-0"
-                style={{ backgroundColor: game.accent_color ?? "#e5e7eb" }}
-                title={game.accent_color ?? "#e5e7eb"}
+                style={{ backgroundColor: game.accent_color }}
+                title={game.accent_color}
               />
 
               <Link href={`/admin/games/${game.id}/edit`}>
