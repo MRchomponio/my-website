@@ -5,6 +5,16 @@ import { createClient } from "@/lib/supabase/server";
 import { ManualBadgeForm } from "@/components/admin/manual-badge-form";
 import { DeleteBadgeButton } from "@/components/admin/delete-badge-button";
 
+// تعریف نوع برای Badge
+type Badge = {
+  id: string;
+  name: string;
+  description: string | null;
+  icon: string | null;
+  is_manual: boolean;
+  created_at?: string;
+};
+
 export default async function AdminBadgesPage() {
   const supabase = await createClient();
   const { data: badges } = await supabase
@@ -12,8 +22,11 @@ export default async function AdminBadgesPage() {
     .select("*")
     .order("name");
 
-  const automaticBadges = badges?.filter((b) => !b.is_manual) ?? [];
-  const manualBadges = badges?.filter((b) => b.is_manual) ?? [];
+  // استفاده از نوع Badge با تبدیل نوع
+  const typedBadges = (badges as Badge[]) ?? [];
+
+  const automaticBadges = typedBadges.filter((b) => !b.is_manual);
+  const manualBadges = typedBadges.filter((b) => b.is_manual);
 
   return (
     <div>
@@ -40,14 +53,14 @@ export default async function AdminBadgesPage() {
                   <Card key={badge.id} className="p-4 flex items-center gap-4">
                     <BadgeIcon
                       name={badge.name}
-                      description={badge.description}
-                      icon={badge.icon}
+                      description={badge.description ?? ""}
+                      icon={badge.icon ?? undefined}
                       size="sm"
                     />
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm">{badge.name}</p>
                       <p className="text-xs text-foreground-subtle truncate">
-                        {badge.description}
+                        {badge.description ?? "بدون توضیحات"}
                       </p>
                     </div>
                     <DeleteBadgeButton badgeId={badge.id} badgeName={badge.name} />
@@ -70,14 +83,14 @@ export default async function AdminBadgesPage() {
                 <Card key={badge.id} className="p-4 flex items-center gap-4 opacity-70">
                   <BadgeIcon
                     name={badge.name}
-                    description={badge.description}
-                    icon={badge.icon}
+                    description={badge.description ?? ""}
+                    icon={badge.icon ?? undefined}
                     size="sm"
                   />
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm">{badge.name}</p>
                     <p className="text-xs text-foreground-subtle truncate">
-                      {badge.description}
+                      {badge.description ?? "بدون توضیحات"}
                     </p>
                   </div>
                 </Card>
