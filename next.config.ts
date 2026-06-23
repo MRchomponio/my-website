@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // این خط رو اضافه کنید تا Next.js بدونه که پوشه src رو بررسی کنه
+  dir: './src',
+  
   images: {
     remotePatterns: [
       {
