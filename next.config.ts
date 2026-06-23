@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // تنظیم پورت برای اجرا
+  serverRuntimeConfig: {
+    port: 3000,
+  },
   images: {
     remotePatterns: [
       {
@@ -16,10 +20,10 @@ const nextConfig: NextConfig = {
     ],
   },
   eslint: {
-    ignoreDuringBuilds: true, // غیرفعال کردن ESLint
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true, // غیرفعال کردن TypeScript
+    ignoreBuildErrors: true,
   },
 };
 
